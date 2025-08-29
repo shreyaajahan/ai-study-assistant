@@ -1,45 +1,64 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
-import os
+from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
+import os
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Initialize Groq client with API key
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Initialize Groq client
+client = Groq(api_key=GROQ_API_KEY)
 
-# Create FastAPI app
+# Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS
+# Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (you can restrict later)
+    allow_origins=["*"],  # In production, replace "*" with your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Request body schema
-class QueryRequest(BaseModel):
-    query: str
+# Request & Response models
+class ChatMessage(BaseModel):
+    sender: str
+    text: str
 
-# Root endpoint
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+
 @app.get("/")
-def home():
-    return {"message": "🚀 AI Study Assistant (Groq) is running"}
+def root():
+    return {"message": "AI Study Assistant Backend is running 🚀"}
 
-# AI query endpoint
 @app.post("/ask")
-def ask_ai(request: QueryRequest):
+def ask_ai(chat: ChatRequest):
+    # System prompt for Markdown formatting
+    groq_messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a helpful AI Study Assistant. "
+                "Always return answers in **structured Markdown** format "
+                "with headings, bullet points, and line breaks for readability."
+            ),
+        }
+    ]
+
+    # Append user/AI messages
+    for msg in chat.messages:
+        role = "user" if msg.sender == "user" else "assistant"
+        groq_messages.append({"role": role, "content": msg.text})
+
+    # Call Groq API
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",  # ✅ Correct Groq model
-        messages=[
-            {"role": "system", "content": "You are a helpful AI Study Assistant."},
-            {"role": "user", "content": request.query},
-        ],
+        model="llama-3.1-8b-instant",
+        messages=groq_messages,
     )
+
     return {"response": response.choices[0].message.content}

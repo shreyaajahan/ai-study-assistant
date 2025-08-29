@@ -1,69 +1,36 @@
-import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";        
+import Chat from "./pages/ChatAI";          
+import Notes from "./pages/Notes";        
+import Progress from "./pages/Progress";  
+import Settings from "./pages/Settings";  
+import DashboardLayout from "./components/DashboardLayout";
 
 function App() {
-  const [query, setQuery] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const askAI = async () => {
-    if (!query.trim()) return;
-    setLoading(true);
-    setResponse("");
-
-    try {
-      const res = await fetch("http://127.0.0.1:8000/ask", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-      });
-
-      const data = await res.json();
-      setResponse(data.response);
-    } catch (error) {
-      setResponse("⚠️ Error connecting to AI backend");
-    }
-
-    setLoading(false);
-  };
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   return (
-    <div style={{ maxWidth: "600px", margin: "40px auto", textAlign: "center", fontFamily: "Arial" }}>
-      <h1>🚀 AI Study Assistant</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Ask me something..."
-        style={{
-          width: "70%",
-          padding: "10px",
-          fontSize: "16px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-        }}
-      />
-      <button
-        onClick={askAI}
-        style={{
-          marginLeft: "10px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          borderRadius: "8px",
-          background: "#4CAF50",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        Ask
-      </button>
+    <Router>
+      <Routes>
+        {/* Default route */}
+        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard/chat" : "/login"} />} />
 
-      <div style={{ marginTop: "20px", textAlign: "left", whiteSpace: "pre-wrap" }}>
-        {loading ? <p>⏳ Thinking...</p> : <p>{response}</p>}
-      </div>
-    </div>
+        {/* Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Dashboard (protected) */}
+        {isLoggedIn ? (
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route path="chat" element={<Chat />} />
+            <Route path="notes" element={<Notes />} />
+            <Route path="progress" element={<Progress />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        ) : (
+          <Route path="/dashboard/*" element={<Navigate to="/login" />} />
+        )}
+      </Routes>
+    </Router>
   );
 }
 
