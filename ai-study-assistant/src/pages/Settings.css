@@ -1,0 +1,69 @@
+/* Settings Page */
+.settings-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .settings-container {
+  background: #1e1e2f;
+  color: #f4f4f9;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+.settings-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+body.dark-mode .settings-title {
+  color: #ffdd57;
+}
+
+.settings-option {
+  margin-bottom: 20px;
+}
+
+.settings-option label {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.settings-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border 0.3s, background 0.3s;
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #ffffff;
+}
+
+body.dark-mode .settings-select {
+  background: #2a2a40;
+  border: 1px solid #444;
+  color: #f4f4f9;
+}
+
+.current-theme {
+  font-size: 0.95rem;
+  margin-top: 10px;
+  color: #666;
+}
+
+body.dark-mode .current-theme {
+  color: #aaa;
+}

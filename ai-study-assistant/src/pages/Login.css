@@ -1,0 +1,86 @@
+/* Page background */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  /* Gradient background */
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+
+  /* Subtle study/tech background pattern */
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+  background-size: cover;
+  background-repeat: repeat;
+
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card container */
+.login-box {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Heading */
+.login-box h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+}
+
+/* Input field */
+.login-box input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.login-box input:focus {
+  border-color: #6366f1;
+  box-shadow: 0px 0px 0px 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Button */
+.login-box button {
+  width: 100%;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-box button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 18px rgba(99, 102, 241, 0.4);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

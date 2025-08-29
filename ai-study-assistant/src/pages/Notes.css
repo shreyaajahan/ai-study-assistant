@@ -1,0 +1,11 @@
+/* Generic page styles */
+.page-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
