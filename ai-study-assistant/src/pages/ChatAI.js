@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { useUser } from "@clerk/clerk-react";
 
 const ChatAI = () => {
+  const { isSignedIn } = useUser(); // ✅ check login
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -9,6 +11,16 @@ const ChatAI = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+
+    // ✅ If not logged in, block
+    if (!isSignedIn) {
+      setMessages([
+        ...messages,
+        { sender: "ai", text: "⚠️ Please login to chat" },
+      ]);
+      setInput("");
+      return;
+    }
 
     // Add user message
     const newMessages = [...messages, { sender: "user", text: input }];
@@ -35,7 +47,6 @@ const ChatAI = () => {
     setLoading(false);
   };
 
-  // Auto scroll to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -78,66 +89,64 @@ const ChatAI = () => {
   );
 };
 
+// ✅ Styles object (fixes "styles is not defined" error)
 const styles = {
   container: {
-    width: "500px",
-    margin: "30px auto",
-    border: "1px solid #ddd",
-    borderRadius: "10px",
-    padding: "10px",
-    fontFamily: "Arial, sans-serif",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    maxWidth: "800px",
+    margin: "0 auto",
+    padding: "20px",
     background: "#f9f9f9",
+    borderRadius: "10px",
   },
   header: {
     fontSize: "20px",
     fontWeight: "bold",
-    textAlign: "center",
     marginBottom: "10px",
   },
   chatBox: {
-    height: "400px",
+    flex: 1,
     overflowY: "auto",
-    border: "1px solid #ccc",
     padding: "10px",
-    borderRadius: "8px",
-    background: "white",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    background: "#fff",
+    marginBottom: "10px",
   },
   userMessage: {
     textAlign: "right",
     margin: "5px 0",
     padding: "8px",
-    background: "#007bff",
-    color: "white",
+    background: "#d1e7dd",
     borderRadius: "8px",
     display: "inline-block",
-    maxWidth: "80%",
   },
   aiMessage: {
     textAlign: "left",
     margin: "5px 0",
     padding: "8px",
-    background: "#e5e5ea",
+    background: "#f8d7da",
     borderRadius: "8px",
     display: "inline-block",
-    maxWidth: "80%",
   },
   inputBox: {
     display: "flex",
-    marginTop: "10px",
+    gap: "10px",
   },
   input: {
     flex: 1,
-    padding: "8px",
+    padding: "10px",
     borderRadius: "5px",
     border: "1px solid #ccc",
   },
   button: {
-    padding: "8px 12px",
-    marginLeft: "5px",
-    border: "none",
+    padding: "10px 20px",
     borderRadius: "5px",
     background: "#007bff",
-    color: "white",
+    color: "#fff",
+    border: "none",
     cursor: "pointer",
   },
 };

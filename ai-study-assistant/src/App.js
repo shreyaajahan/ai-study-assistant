@@ -1,34 +1,44 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";        
-import Chat from "./pages/ChatAI";          
-import Notes from "./pages/Notes";        
-import Progress from "./pages/Progress";  
-import Settings from "./pages/Settings";  
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+import Chat from "./pages/ChatAI";
+import Notes from "./pages/Notes";
+import Progress from "./pages/Progress";
+import Settings from "./pages/Settings";
 import DashboardLayout from "./components/DashboardLayout";
+import LandingPage from "./pages/LandingPage"; // ✅ your new landing page
 
 function App() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
   return (
     <Router>
       <Routes>
-        {/* Default route */}
-        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard/chat" : "/login"} />} />
+        {/* Landing Page (default root) */}
+        <Route path="/" element={<LandingPage />} />
 
-        {/* Login */}
-        <Route path="/login" element={<Login />} />
+        {/* Login page → Clerk’s sign-in flow directly */}
+        <Route
+          path="/login"
+          element={
+            <SignedOut>
+              <RedirectToSignIn redirectUrl="/dashboard/chat" />
+            </SignedOut>
+          }
+        />
 
         {/* Dashboard (protected) */}
-        {isLoggedIn ? (
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route path="chat" element={<Chat />} />
-            <Route path="notes" element={<Notes />} />
-            <Route path="progress" element={<Progress />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-        ) : (
-          <Route path="/dashboard/*" element={<Navigate to="/login" />} />
-        )}
+        <Route
+          path="/dashboard"
+          element={
+            <SignedIn>
+              <DashboardLayout />
+            </SignedIn>
+          }
+        >
+          <Route path="chat" element={<Chat />} />
+          <Route path="notes" element={<Notes />} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Routes>
     </Router>
   );
