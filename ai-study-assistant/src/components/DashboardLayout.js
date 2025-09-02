@@ -3,7 +3,7 @@ import {
   MessageSquare,
   FileText,
   BarChart2,
-  Settings,
+  //Settings,
   BookOpen,
   Moon,
   Sun,
@@ -14,7 +14,8 @@ import {
   SignedOut,
   UserButton,
   SignInButton,
-} from "@clerk/clerk-react"; 
+  useUser,   // ✅ import Clerk hook
+} from "@clerk/clerk-react";
 import "./DashboardLayout.css";
 
 function DashboardLayout() {
@@ -22,6 +23,8 @@ function DashboardLayout() {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+
+  const { user } = useUser(); // ✅ get user
 
   useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
@@ -54,12 +57,12 @@ function DashboardLayout() {
           >
             <BarChart2 size={18} /> Progress
           </Link>
-          <Link
+          {/* <Link
             to="settings"
             className={location.pathname.includes("settings") ? "active" : ""}
           >
             <Settings size={18} /> Settings
-          </Link>
+          </Link> */}
         </nav>
       </aside>
 
@@ -67,7 +70,8 @@ function DashboardLayout() {
       <main className="main">
         <header className="topbar">
           <span>
-            👋 Welcome, <strong>Student</strong>
+            👋 Welcome,{" "}
+            <strong>{user ? user.firstName || user.username : "Guest"}</strong>
           </span>
 
           <div className="actions">
@@ -81,12 +85,10 @@ function DashboardLayout() {
 
             {/* Clerk Auth Controls */}
             <SignedIn>
-              {/* 👇 Removed afterSignOutUrl */}
               <UserButton />
             </SignedIn>
 
             <SignedOut>
-              {/* 👇 Opens Clerk modal inline */}
               <SignInButton mode="modal">
                 <button className="login-btn">Login</button>
               </SignInButton>

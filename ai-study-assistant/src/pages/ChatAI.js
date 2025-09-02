@@ -90,6 +90,9 @@ const ChatAI = () => {
 };
 
 // ✅ Styles object (fixes "styles is not defined" error)
+// ✅ Detect system dark mode
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
 const styles = {
   container: {
     display: "flex",
@@ -98,57 +101,71 @@ const styles = {
     maxWidth: "800px",
     margin: "0 auto",
     padding: "20px",
-    background: "#f9f9f9",
-    borderRadius: "10px",
+    background: isDarkMode ? "#1e1e1e" : "white",
+    borderRadius: "16px",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+    color: isDarkMode ? "#f1f1f1" : "#333",
   },
   header: {
-    fontSize: "20px",
+    fontSize: "22px",
     fontWeight: "bold",
-    marginBottom: "10px",
+    marginBottom: "15px",
+    textAlign: "center",
+    color: isDarkMode ? "#f1f1f1" : "#333",
   },
   chatBox: {
     flex: 1,
     overflowY: "auto",
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    background: "#fff",
-    marginBottom: "10px",
+    padding: "15px",
+    border: "1px solid #444",
+    borderRadius: "12px",
+    background: isDarkMode ? "#2a2a2a" : "#fafafa",
+    marginBottom: "15px",
   },
   userMessage: {
-    textAlign: "right",
-    margin: "5px 0",
-    padding: "8px",
-    background: "#d1e7dd",
-    borderRadius: "8px",
-    display: "inline-block",
-  },
+  alignSelf: "flex-end",          // ✅ push user messages to the right
+  margin: "8px 0",
+  padding: "10px 14px",
+  background: "#007bff",
+  color: "#fff",
+  borderRadius: "12px 12px 0 12px",
+  maxWidth: "70%",
+  wordWrap: "break-word",
+},
+
   aiMessage: {
-    textAlign: "left",
-    margin: "5px 0",
-    padding: "8px",
-    background: "#f8d7da",
-    borderRadius: "8px",
-    display: "inline-block",
-  },
+  alignSelf: "flex-start",        // ✅ keep AI messages on the left
+  margin: "8px 0",
+  padding: "10px 14px",
+  background: "#f1f1f1",
+  borderRadius: "12px 12px 12px 0",
+  maxWidth: "70%",
+  wordWrap: "break-word",
+},
+
   inputBox: {
     display: "flex",
     gap: "10px",
   },
   input: {
     flex: 1,
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #555",
+    fontSize: "14px",
+    background: isDarkMode ? "#2a2a2a" : "#fff",
+    color: isDarkMode ? "#f1f1f1" : "#000",
   },
   button: {
-    padding: "10px 20px",
-    borderRadius: "5px",
+    padding: "12px 20px",
+    borderRadius: "10px",
     background: "#007bff",
     color: "#fff",
     border: "none",
     cursor: "pointer",
+    transition: "0.2s",
   },
 };
+
 
 export default ChatAI;
